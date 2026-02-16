@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "llm-lab"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+  "ollama>=0.6.0",
+  "httpx>=0.28",
+  "pydantic>=2.9",
+  "python-dotenv>=1.0",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+mypy_path = ["src"]
+packages = ["llm_lab"]
