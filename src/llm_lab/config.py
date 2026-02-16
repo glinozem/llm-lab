@@ -3,6 +3,11 @@ from __future__ import annotations
 import os
 import subprocess
 
+from pydantic import Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+from llm_lab.types import Provider
+
 
 def is_wsl() -> bool:
     try:
@@ -28,3 +33,17 @@ def default_ollama_host() -> str:
             pass
 
     return "http://localhost:11434"
+
+
+class Settings(BaseSettings):
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
+
+    llm_provider: Provider = "ollama"
+
+    ollama_host: str = Field(default_factory=default_ollama_host)
+    ollama_model: str = "mistral"
+
+    openai_api_key: str | None = None
+    openai_base_url: str = "https://api.openai.com"
+    openai_model: str = "gpt-5"
+

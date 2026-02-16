@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import Literal, Protocol, TypedDict
 
-
-Role = Literal["system", "user", "assistant"]
+Role = Literal["system", "developer", "user", "assistant"]
+Provider = Literal["ollama", "openai"]
 
 
 class Message(TypedDict):
