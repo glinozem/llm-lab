@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import httpx
 
-from llm_lab.clients.openai_client import OpenAIClient
+from llm_lab.clients.openai import OpenAIClient
 
 
 def test_openai_generate_parses_output_text() -> None:

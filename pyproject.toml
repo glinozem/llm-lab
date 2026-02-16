@@ -14,21 +14,52 @@ dependencies = [
   "python-dotenv>=1.0",
 ]
 
+[project.optional-dependencies]
+dev = [
+  "ruff>=0.6",
+  "mypy>=1.8",
+  "pytest>=8.0",
+]
+
+[project.scripts]
+llm-lab = "llm_lab.cli:main"
+
 [tool.ruff]
 line-length = 100
 target-version = "py312"
+src = ["src"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = []
+
+[tool.ruff.lint.isort]
+known-first-party = ["llm_lab"]
 
 [tool.mypy]
 python_version = "3.12"
+warn_return_any = true
+warn_unused_ignores = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+no_implicit_optional = true
+strict_equality = true
+show_error_codes = true
+pretty = true
+files = ["src/llm_lab"]
 strict = true
 mypy_path = ["src"]
-packages = ["llm_lab"]
 
 [tool.setuptools]
 package-dir = {"" = "src"}
 
+[tool.setuptools.package-data]
+llm_lab = ["py.typed"]
+
 [tool.setuptools.packages.find]
 where = ["src"]
 
-[project.optional-dependencies]
-dev = ["ruff", "mypy", "pytest"]
+
+[[tool.mypy.overrides]]
+module = ["ollama", "ollama.*"]
+ignore_missing_imports = true

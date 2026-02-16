@@ -11,7 +11,7 @@ from llm_lab.types import Provider
 
 def is_wsl() -> bool:
     try:
-        with open("/proc/version", "r", encoding="utf-8") as f:
+        with open("/proc/version", encoding="utf-8") as f:
             return "microsoft" in f.read().lower()
     except OSError:
         return False
@@ -46,4 +46,3 @@ class Settings(BaseSettings):
     openai_api_key: str | None = None
     openai_base_url: str = "https://api.openai.com"
     openai_model: str = "gpt-5"
-

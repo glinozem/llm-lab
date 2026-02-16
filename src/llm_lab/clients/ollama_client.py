@@ -4,9 +4,9 @@ from typing import cast
 
 from ollama import Client
 
-from llm_lab.config import default_ollama_host
-from llm_lab.types import Message
 from llm_lab.clients.ollama_types import OllamaChatResponse
+from llm_lab.settings import default_ollama_host
+from llm_lab.types import Message
 
 
 class OllamaClient:

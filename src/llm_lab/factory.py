@@ -2,24 +2,39 @@ from __future__ import annotations
 
 from typing import Literal, overload
 
-from llm_lab.clients.ollama_client import OllamaClient
-from llm_lab.clients.openai_client import OpenAIClient
-from llm_lab.config import Settings
-from llm_lab.types import LLMClient, Provider
+from .clients import OllamaClient, OpenAIClient
+from .contracts import LLMClient
+from .settings import Settings
+from .types import Provider
 
 
 class LLMFactory:
     @overload
     @staticmethod
-    def create(provider: Literal["ollama"], /, *, settings: Settings | None = None) -> OllamaClient: ...
+    def create(
+        provider: Literal["ollama"],
+        /,
+        *,
+        settings: Settings | None = None,
+    ) -> OllamaClient: ...
 
     @overload
     @staticmethod
-    def create(provider: Literal["openai"], /, *, settings: Settings | None = None) -> OpenAIClient: ...
+    def create(
+        provider: Literal["openai"],
+        /,
+        *,
+        settings: Settings | None = None,
+    ) -> OpenAIClient: ...
 
     @overload
     @staticmethod
-    def create(provider: Provider, /, *, settings: Settings | None = None) -> OpenAIClient | OllamaClient: ...
+    def create(
+        provider: Provider,
+        /,
+        *,
+        settings: Settings | None = None,
+    ) -> OpenAIClient | OllamaClient: ...
 
     @overload
     @staticmethod

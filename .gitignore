@@ -1,18 +1,30 @@
-# venv / caches
-.venv/
-__pycache__/
-*.pyc
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
+# local artifacts / snapshots
+artifacts/
+
+# patch leftovers
+*.patch
+
+# Windows ADS files that sometimes appear in WSL
+*:Zone.Identifier
 
 # IDE
 .idea/
+.vscode/
 
-# packaging artifacts
+# Python / build
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
 build/
 dist/
-*.egg-info/
 
-# env
-.env
+# test/lint caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# local backups
+.gitignore.bak.*
