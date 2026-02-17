@@ -1,0 +1,18 @@
+name: "📝 Documentation"
+description: "Правка/улучшение документации"
+title: "[Docs]: "
+labels: ["documentation"]
+body:
+  - type: textarea
+    attributes:
+      label: Что нужно улучшить
+      description: Где именно (README/docs/комментарии) и что неясно.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Предложенный текст / структура
+      description: Можно черновиком.
+    validations:
+      required: false

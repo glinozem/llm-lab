@@ -1,0 +1,66 @@
+name: "🐛 Bug report"
+description: "Сообщить о баге"
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: checkboxes
+    attributes:
+      label: Предварительно
+      options:
+        - label: Я проверил существующие Issues и не нашёл дубликат
+          required: true
+
+  - type: textarea
+    attributes:
+      label: Описание
+      description: Что не так и почему это баг.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Шаги воспроизведения
+      description: Минимальные шаги для воспроизведения.
+      placeholder: |
+        1) ...
+        2) ...
+        3) ...
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Ожидаемое поведение
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Фактическое поведение / лог
+      description: Вставьте релевантные логи/трассировки (без секретов).
+      render: shell
+    validations:
+      required: false
+
+  - type: dropdown
+    attributes:
+      label: Provider
+      options:
+        - ollama
+        - openai
+        - n/a
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Окружение
+      description: ОС, Python, как запускается (WSL/Windows), модель, переменные окружения (без секретов).
+      placeholder: |
+        OS: Windows 11 + WSL2 Ubuntu 24.04
+        Python: 3.12.x
+        Command: make local-llm ARGS='...'
+        OLLAMA_HOST: http://...
+        OLLAMA_MODEL: mistral
+    validations:
+      required: true

@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: README / Quickstart
+    url: https://github.com/glinozem/llm-lab#readme
+    about: Быстрый старт, WSL2↔Windows (Ollama), примеры CLI и scripts/local_llm.py

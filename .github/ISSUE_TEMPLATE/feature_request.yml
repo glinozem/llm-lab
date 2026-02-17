@@ -1,0 +1,42 @@
+name: "✨ Feature request"
+description: "Запрос на фичу/улучшение"
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: checkboxes
+    attributes:
+      label: Предварительно
+      options:
+        - label: Я проверил существующие Issues и не нашёл дубликат
+          required: true
+
+  - type: textarea
+    attributes:
+      label: Проблема / мотивация
+      description: Какую боль решаем и зачем это проекту.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Предложение
+      description: Что именно сделать (API/CLI/архитектура), как это должно работать.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Альтернативы
+      description: Какие есть альтернативные решения/компромиссы.
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: Acceptance criteria
+      description: Критерии готовности/проверки.
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+    validations:
+      required: true
