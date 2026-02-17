@@ -166,9 +166,25 @@ make_report() {
       echo "-- pattern: $pat --"
       # ripgrep if available, else grep
       if have rg; then
-        rg -n --hidden --no-ignore-vcs "$pat" . || true
+        rg -n --hidden --no-ignore-vcs \
+          --glob '!**/.git/**' \
+          --glob '!**/.venv/**' \
+          --glob '!**/artifacts/**' \
+          --glob '!**/__pycache__/**' \
+          --glob '!**/.mypy_cache/**' \
+          --glob '!**/.pytest_cache/**' \
+          --glob '!**/.ruff_cache/**' \
+          -e "$pat" . || true
       else
-        grep -RIn --exclude-dir=.git --exclude-dir=.venv --exclude-dir=artifacts "$pat" . || true
+        grep -RIn \
+          --exclude-dir=.git \
+          --exclude-dir=.venv \
+          --exclude-dir=artifacts \
+          --exclude-dir=__pycache__ \
+          --exclude-dir=.mypy_cache \
+          --exclude-dir=.pytest_cache \
+          --exclude-dir=.ruff_cache \
+          -e "$pat" . || true
       fi
     done
   ) > "$out_dir/meta/secret_smoke.txt" 2>&1
@@ -221,7 +237,10 @@ pack() {
   local archive="$out_abs/${snap_name}.tar.gz"
 
   tar -C "$tmp_root" -czf "$archive" .
-  sha256sum "$archive" > "${archive}.sha256"
+  (
+    cd "$out_abs"
+    sha256sum "$(basename "$archive")" > "$(basename "$archive").sha256"
+  )
 
   echo "OK"
   echo "Archive: $archive"

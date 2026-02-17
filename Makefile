@@ -34,7 +34,7 @@ test:
 check: format-check lint typecheck mypy-smoke test
 
 run:
-	$(PY) -m llm_lab.cli $(ARGS)
+	$(PY) -m llm_lab $(ARGS)
 
 integration:
 	@WIN_HOST=$$(ip -4 route show default | awk '{print $$3; exit}'); \
