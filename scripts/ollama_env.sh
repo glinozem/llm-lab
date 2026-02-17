@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Must be sourced to affect the current shell.
+# If executed directly, exports will not persist outside this process.
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+  echo "WARN: scripts/ollama_env.sh is meant to be sourced (not executed)." >&2
+  echo "      Run: source ${BASH_SOURCE[0]}" >&2
+  echo >&2
+fi
+
 # WSL helper: derive Ollama endpoint from the default gateway (Windows host) if not set.
 # Usage:
 #   source scripts/ollama_env.sh
