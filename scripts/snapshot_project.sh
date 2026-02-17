@@ -245,6 +245,7 @@ pack() {
   echo "OK"
   echo "Archive: $archive"
   echo "SHA256 : ${archive}.sha256"
+  echo "Verify : (cd $out_dir && sha256sum -c *.sha256)"
 }
 
 main() {
