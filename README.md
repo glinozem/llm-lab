@@ -1,28 +1,25 @@
 # llm-lab
 
-Учебно-практический “лаб” для инженерии LLM на Python: **строго типизированные клиенты** для **OpenAI** и **Ollama**, небольшой CLI, аккуратные проверки качества и CI.
+Учебно‑практический “лаб” для инженерии LLM на Python: **строго типизированные клиенты** для **OpenAI** и **Ollama**, небольшой CLI, аккуратные проверки качества и CI.
 
 ## Что внутри
 
 - **Строгая типизация**
   - `TypedDict Message` (сообщения)
-  - `Protocol`-контракт `LLMClient.generate(list[Message]) -> str`
+  - `Protocol`‑контракт `LLMClient.generate(list[Message]) -> str`
 - **LLMFactory** с `@overload + Literal` — type checker выводит конкретные типы клиентов
 - **CLI**
-  - консольная команда `llm-lab`
+  - команда `llm-lab`
   - entrypoint: `python -m llm_lab`
-- **Настройки** из окружения / `.env` (через `pydantic-settings`)
 - **Ollama для WSL2 ↔ Windows**
   - Windows: `ollama serve` слушает `0.0.0.0:11434`
   - WSL: доступ через default gateway (fallback)
 - **Quality gates / CI**
   - `ruff` (format + lint)
   - `mypy` (строго)
-  - `mypy-smoke` (проверка `reveal_type` для overload’ов)
+  - `mypy-smoke` (`reveal_type` для overload’ов)
   - `pytest` unit
   - `pytest` integration (для Ollama)
-
----
 
 ## Требования
 
@@ -30,8 +27,6 @@
 - Для Ollama:
   - Windows: установлен Ollama
   - WSL2: доступ к Ollama, запущенному на Windows
-
----
 
 ## Установка
 
@@ -43,15 +38,9 @@ python -m pip install -U pip
 pip install -e ".[dev]"
 ```
 
----
+> `.env` пока не обязателен: настройки читаются из переменных окружения; `.env` — опционален.
 
-## Конфигурация
-
-```bash
-cp .env.example .env
-```
-
-Типовые переменные окружения:
+## Конфигурация (env vars)
 
 - `LLM_PROVIDER=ollama|openai`
 - `OLLAMA_HOST=http://<host>:11434`
@@ -59,35 +48,6 @@ cp .env.example .env
 - `OPENAI_API_KEY=<key>`
 - `OPENAI_BASE_URL=https://api.openai.com`
 - `OPENAI_MODEL=<model>`
-
-> Примечание: если `OLLAMA_HOST` не задан в WSL, проект может брать host как default gateway из таблицы маршрутизации.
-
----
-
-## Использование
-
-### 1) Один prompt
-
-**Ollama:**
-```bash
-python -m llm_lab --provider ollama --model mistral --prompt "ping"
-```
-
-**OpenAI:**
-```bash
-export OPENAI_API_KEY="..."
-python -m llm_lab --provider openai --model gpt-5 --prompt "Скажи привет"
-```
-
-### 2) Режим сообщений
-
-`role:content`, где `role` ∈ `system|developer|user|assistant`:
-
-```bash
-python -m llm_lab   --provider ollama   --model mistral   --message "system:Ты полезный ассистент."   --message "developer:Отвечай точно и кратко."   --message "user:Объясни, что такое Protocol в typing."
-```
-
----
 
 ## Ollama: Windows + WSL2
 
@@ -112,6 +72,68 @@ make integration
 
 ---
 
+## Быстрый старт “как в курсе” (без .env)
+
+### 1) Windows: поднять Ollama сервер
+
+PowerShell:
+
+```powershell
+.\scripts\ollama_serve.ps1
+```
+
+### 2) WSL2: настроить доступ к Ollama на Windows
+
+```bash
+export OLLAMA_HOST="http://$(ip -4 route show default | awk '{print $3; exit}'):11434"
+export OLLAMA_MODEL="mistral"
+```
+
+Проверка:
+
+```bash
+make ollama-ping
+```
+
+### 3) Запросы из Python (наш “взрослый” скрипт)
+
+generate:
+
+```bash
+python scripts/local_llm.py generate --prompt "ping"
+```
+
+chat:
+
+```bash
+python scripts/local_llm.py chat --prompt "Что такое FastAPI?"
+```
+
+stream:
+
+```bash
+python scripts/local_llm.py chat --prompt "Расскажи про миграции в БД" --stream
+```
+
+---
+
+## Мини-скрипт “по‑взрослому”: `scripts/local_llm.py`
+
+Скрипт поддерживает:
+
+- `generate` / `chat`
+- `--stream`
+- берёт `OLLAMA_HOST` / `OLLAMA_MODEL` из окружения (или использует дефолты проекта)
+- аккуратный “dry parsing” ответов Ollama (поддерживаются и dict-ответы, и объектные ответы `ollama-python`)
+
+Примеры:
+
+```bash
+python scripts/local_llm.py generate --prompt "Что такое Alembic?"
+python scripts/local_llm.py chat --prompt "Что такое FastAPI?"
+python scripts/local_llm.py chat --prompt "Расскажи про миграции в БД" --stream
+```
+
 ## Разработка и проверки
 
 Главная команда:
@@ -130,8 +152,6 @@ make check
 - `make integration` (требует Ollama)
 - `make makefile-smoke` (защита от “missing separator”: рецепты Makefile должны начинаться с TAB)
 
----
-
 ## Снимки проекта (sanitized snapshot)
 
 ```bash
@@ -140,12 +160,6 @@ make check
 ```
 
 В архиве:
+
 - `repo/` — санитизированная копия репозитория
 - `report/` — метаданные окружения/команды/secret-smoke
-
----
-
-## Следующий шаг (RAG → агенты)
-
-- v0.2: **Embeddings contract + providers** → минимальный **RAG** → CLI `rag ingest/ask`
-- v0.3: **tool interface + agent loop** + минимальный eval harness

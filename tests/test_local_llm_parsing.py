@@ -45,7 +45,5 @@ def test_join_stream_chat() -> None:
 
 
 def test_extract_chat_raises_on_error() -> None:
-    from llm_lab.ollama_local import extract_chat_text
-
     with pytest.raises(RuntimeError):
         extract_chat_text({"error": "model does not support chat"})
