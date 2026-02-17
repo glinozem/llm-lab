@@ -59,7 +59,11 @@ llm_lab = ["py.typed"]
 [tool.setuptools.packages.find]
 where = ["src"]
 
-
 [[tool.mypy.overrides]]
 module = ["ollama", "ollama.*"]
 ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+markers = [
+  "integration: requires local services (e.g., Ollama)",
+]
