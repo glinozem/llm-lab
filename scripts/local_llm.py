@@ -49,11 +49,10 @@ def _env_int(name: str, default: int) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    p = (
-        argparse.ArgumentParser(
-            prog="local_llm",
-            description="Local Ollama runner (generate/chat/stream) "
-            "using env OLLAMA_HOST/OLLAMA_MODEL.",
+    p = argparse.ArgumentParser(
+        prog="local_llm",
+        description=(
+            "Local Ollama runner (generate/chat/stream) using env OLLAMA_HOST/OLLAMA_MODEL."
         ),
     )
 
