@@ -49,6 +49,61 @@ pip install -e ".[dev]"
 - `OPENAI_BASE_URL=https://api.openai.com`
 - `OPENAI_MODEL=<model>`
 
+## Использование (CLI `llm-lab` / `python -m llm_lab`)
+
+> CLI поддерживает **два режима ввода**: `--prompt` (один запрос) и `--message` (мульти‑сообщения `role:content`).
+> Допустимые роли: `system|developer|user|assistant`.  
+> Параметры можно передавать флагами CLI или через переменные окружения (см. раздел “Конфигурация (env vars)”).
+
+### 1) Один запрос (`--prompt`)
+
+**Ollama:**
+```bash
+python -m llm_lab --provider ollama --model mistral --prompt "ping"
+# или так:
+llm-lab --provider ollama --model mistral --prompt "ping"
+```
+
+Если нужно явно задать хост Ollama (например, WSL2 → Windows):
+```bash
+llm-lab --provider ollama --ollama-host "$OLLAMA_HOST" --model mistral --prompt "ping"
+```
+
+**OpenAI:**
+```bash
+export OPENAI_API_KEY="***"
+python -m llm_lab --provider openai --model gpt-5 --prompt "Скажи привет"
+```
+
+Альтернатива (не рекомендуется светить ключ в истории shell):
+```bash
+llm-lab --provider openai --openai-api-key "$OPENAI_API_KEY" --model gpt-5 --prompt "Скажи привет"
+```
+
+### 2) Сообщения (`--message`), “как чат”
+
+Формат каждого сообщения: `role:content`. Флаг **повторяемый**.
+
+```bash
+python -m llm_lab --provider ollama --model mistral \
+  --message "system:Ты полезный ассистент." \
+  --message "developer:Отвечай точно и кратко." \
+  --message "user:Объясни, что такое Protocol в typing."
+```
+
+Можно переопределять системные сообщения по умолчанию:
+```bash
+llm-lab --provider ollama --model mistral \
+  --system "Ты полезный ассистент." \
+  --developer "Отвечай структурно и с примерами." \
+  --message "user:Что такое FastAPI?"
+```
+
+### 3) Типичные ошибки
+
+- Если запустить без `--prompt` и без `--message`, CLI завершится с ошибкой и подсказкой.
+- Если у `--message` нет двоеточия или пустой content — ошибка формата.
+
 ## Ollama: Windows + WSL2
 
 ### 1) Запуск Ollama на Windows
