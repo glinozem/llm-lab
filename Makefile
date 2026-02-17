@@ -1,4 +1,4 @@
-.PHONY: help format format-check lint typecheck mypy-smoke test check run
+.PHONY: help format format-check lint typecheck mypy-smoke test check run makefile-smoke integration ollama-ping local-llm
 
 PY ?= python
 
@@ -12,6 +12,9 @@ help:
 	@echo "  test          - pytest"
 	@echo "  check         - format-check + lint + typecheck + mypy-smoke + test"
 	@echo "  run           - run CLI with ARGS='...'"
+	@echo "  ollama-ping   - ping Ollama from WSL (uses default gateway if OLLAMA_HOST is unset)"
+	@echo "  local-llm     - run scripts/local_llm.py with ARGS='...' (uses default gateway if OLLAMA_HOST is unset)"
+	@echo "  integration   - run integration tests (uses default gateway if OLLAMA_HOST is unset)"
 
 format:
 	$(PY) -m ruff format .
@@ -54,3 +57,16 @@ ollama-ping:
 	OLLAMA_HOST=$${OLLAMA_HOST:-http://$$WIN_HOST:11434}; \
 	echo "OLLAMA_HOST=$$OLLAMA_HOST"; \
 	llm-lab --provider ollama --ollama-host "$$OLLAMA_HOST" --model mistral:latest --prompt "ping"
+
+local-llm:
+	@OLLAMA_HOST_ENV=$${OLLAMA_HOST:-}; \
+	if [ -z "$$OLLAMA_HOST_ENV" ]; then \
+		WIN_HOST=$$(ip -4 route show default | awk '{print $$3; exit}'); \
+		OLLAMA_HOST_ENV="http://$$WIN_HOST:11434"; \
+	fi; \
+	case "$$OLLAMA_HOST_ENV" in \
+		*://*) ;; \
+		*) OLLAMA_HOST_ENV="http://$$OLLAMA_HOST_ENV" ;; \
+	esac; \
+	echo "OLLAMA_HOST=$$OLLAMA_HOST_ENV"; \
+	OLLAMA_HOST=$$OLLAMA_HOST_ENV $(PY) scripts/local_llm.py $(ARGS)
