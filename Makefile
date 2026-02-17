@@ -31,7 +31,14 @@ mypy-smoke:
 test:
 	$(PY) -m pytest -q -m "not integration"
 
-check: format-check lint typecheck mypy-smoke test
+makefile-smoke:
+	@# fail if recipe lines start with spaces (common "missing separator" trap)
+	@awk 'BEGIN{bad=0;in_recipe=0} \
+in_recipe && $$0 ~ /^ +[^#[:space:]]/ {printf "Makefile: recipe must start with TAB (line %d): %s\n", NR, $$0 > "/dev/stderr"; bad=1} \
+in_recipe && $$0 ~ /^[^[:space:]]/ {in_recipe=0} \
+END{exit bad}' Makefile
+
+check: makefile-smoke format-check lint typecheck mypy-smoke test
 
 run:
 	$(PY) -m llm_lab $(ARGS)
