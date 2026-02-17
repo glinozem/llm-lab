@@ -28,3 +28,6 @@ htmlcov/
 
 # local backups
 .gitignore.bak.*
+
+*:Zone.Identifier
+
