@@ -18,6 +18,7 @@
   - `ruff` (format + lint)
   - `mypy` (строго)
   - `mypy-smoke` (`reveal_type` для overload’ов)
+  - `lock-check` (uv: `requirements*.txt` соответствуют `pyproject.toml`)
   - `pytest` unit
   - `pytest` integration (для Ollama)
 
@@ -191,6 +192,31 @@ python scripts/local_llm.py chat --prompt "Расскажи про миграц�
 
 ## Разработка и проверки
 
+### Lockfiles (uv)
+
+В репозитории поддерживаются `requirements.txt` и `requirements-dev.txt`, которые **генерируются из `pyproject.toml` через `uv`**.
+В CI есть отдельный job `lock-check`, который запускает `make lock-check` и падает на diff.
+
+Установить `uv` (один раз локально):
+```bash
+python -m pip install -U uv
+```
+
+Обновить lockfiles:
+```bash
+make lock
+```
+
+Проверить, что lockfiles не “уплыли”:
+```bash
+make lock-check
+```
+
+Установить зависимости “как в CI” (из `requirements-dev.txt`):
+```bash
+make sync
+```
+
 Главная команда:
 
 ```bash
@@ -199,6 +225,8 @@ make check
 
 Полезные таргеты:
 
+- `make lock` / `make lock-check` (требует `uv`)
+- `make sync` (установка зависимостей как в CI: из `requirements-dev.txt`)
 - `make format` / `make format-check`
 - `make lint`
 - `make typecheck`
