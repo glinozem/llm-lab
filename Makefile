@@ -1,6 +1,7 @@
-.PHONY: help format format-check lint typecheck mypy-smoke test check run makefile-smoke integration ollama-ping local-llm
+.PHONY: help format format-check lint typecheck mypy-smoke test check run makefile-smoke integration ollama-ping local-llm lock lock-check sync
 
 PY ?= python
+UV ?= uv
 
 help:
 	@echo "Targets:"
@@ -11,6 +12,9 @@ help:
 	@echo "  mypy-smoke    - mypy reveal_type smoke check"
 	@echo "  test          - pytest"
 	@echo "  check         - format-check + lint + typecheck + mypy-smoke + test"
+	@echo "  lock          - generate requirements*.txt from pyproject.toml (via uv)"
+	@echo "  lock-check    - regenerate requirements*.txt and fail on diff"
+	@echo "  sync          - install deps from requirements-dev.txt and install project editable"
 	@echo "  run           - run CLI with ARGS='...'"
 	@echo "  ollama-ping   - ping Ollama from WSL (uses default gateway if OLLAMA_HOST is unset)"
 	@echo "  local-llm     - run scripts/local_llm.py with ARGS='...' (uses default gateway if OLLAMA_HOST is unset)"
@@ -34,12 +38,24 @@ mypy-smoke:
 test:
 	$(PY) -m pytest -q -m "not integration"
 
+lock:
+	$(UV) pip compile pyproject.toml -o requirements.txt
+	$(UV) pip compile pyproject.toml --extra dev -o requirements-dev.txt
+
+lock-check:
+	@$(MAKE) --no-print-directory lock
+	@git diff --exit-code -- requirements.txt requirements-dev.txt
+
+sync:
+	$(PY) -m pip install -r requirements-dev.txt
+	$(PY) -m pip install -e .
+
 makefile-smoke:
 	@# fail if recipe lines start with spaces (common "missing separator" trap)
 	@awk 'BEGIN{bad=0;in_recipe=0} \
-in_recipe && $$0 ~ /^ +[^#[:space:]]/ {printf "Makefile: recipe must start with TAB (line %d): %s\n", NR, $$0 > "/dev/stderr"; bad=1} \
-in_recipe && $$0 ~ /^[^[:space:]]/ {in_recipe=0} \
-END{exit bad}' Makefile
+	in_recipe && $$0 ~ /^ +[^#[:space:]]/ {printf "Makefile: recipe must start with TAB (line %d): %s\n", NR, $$0 > "/dev/stderr"; bad=1} \
+	in_recipe && $$0 ~ /^[^[:space:]]/ {in_recipe=0} \
+	END{exit bad}' Makefile
 
 check: makefile-smoke format-check lint typecheck mypy-smoke test
 
