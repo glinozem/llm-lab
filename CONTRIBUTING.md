@@ -7,13 +7,19 @@
 Требования:
 - Python 3.12+
 - (опционально) Ollama для интеграционных тестов
+- (опционально) `uv` для генерации `requirements*.txt`
 
 Установка:
 ```bash
 python -m venv .venv
 . .venv/bin/activate
 python -m pip install -U pip
+
+# Быстро: из pyproject.toml
 pip install -e ".[dev]"
+
+# Как в CI: из requirements-dev.txt
+# make sync
 ```
 
 Проверки:
@@ -21,6 +27,22 @@ pip install -e ".[dev]"
 make check
 make makefile-smoke
 ```
+
+## Lockfiles (uv)
+
+В репозитории поддерживаются `requirements.txt` и `requirements-dev.txt`, генерируемые из `pyproject.toml`.
+
+Обновить:
+```bash
+make lock
+```
+
+Проверить, что lockfiles не “уплыли”:
+```bash
+make lock-check
+```
+
+Если PR меняет зависимости (например, Dependabot), в идеале в PR должны быть согласованные изменения в `pyproject.toml` и `requirements*.txt`.
 
 ## Ветвление и PR
 
