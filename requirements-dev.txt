@@ -49,7 +49,7 @@ pygments==2.19.2
     # via pytest
 pytest==9.0.2
     # via llm-lab (pyproject.toml)
-python-dotenv==1.2.1
+python-dotenv==1.2.2
     # via
     #   llm-lab (pyproject.toml)
     #   pydantic-settings

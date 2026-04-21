@@ -31,7 +31,7 @@ pydantic-core==2.41.5
     # via pydantic
 pydantic-settings==2.13.0
     # via llm-lab (pyproject.toml)
-python-dotenv==1.2.1
+python-dotenv==1.2.2
     # via
     #   llm-lab (pyproject.toml)
     #   pydantic-settings
