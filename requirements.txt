@@ -16,7 +16,7 @@ httpx==0.28.1
     # via
     #   llm-lab (pyproject.toml)
     #   ollama
-idna==3.11
+idna==3.15
     # via
     #   anyio
     #   httpx
